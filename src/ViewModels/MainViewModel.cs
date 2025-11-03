@@ -59,6 +59,9 @@ public partial class MainViewModel : ObservableObject
     private bool _isPlaylist;
 
     [ObservableProperty]
+    private bool _audioOnly;
+
+    [ObservableProperty]
     private string _customArguments = string.Empty;
 
     public ObservableCollection<DownloadItem> Downloads { get; } = new();
@@ -205,7 +208,7 @@ public partial class MainViewModel : ObservableObject
                 OutputPath = OutputPath,
                 Options = new DownloadOptions
                 {
-                    Quality = SelectedQuality,
+                    Quality = AudioOnly ? VideoQuality.AudioOnly : SelectedQuality,
                     AudioFormat = SelectedAudioFormat,
                     VideoCodec = SelectedCodec,
                     DownloadSubtitles = DownloadSubtitles,

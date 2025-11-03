@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace YTDLManager.Models;
 
@@ -64,15 +66,35 @@ public enum VideoCodec
     AV1
 }
 
-public class DownloadItem
+public class DownloadItem : ObservableObject
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Url { get; set; } = string.Empty;
-    public string Title { get; set; } = "Unknown";
+    
+    private string _title = "Unknown";
+    public string Title
+    {
+        get => _title;
+        set => SetProperty(ref _title, value);
+    }
+    
     public string Thumbnail { get; set; } = string.Empty;
     public string OutputPath { get; set; } = string.Empty;
-    public DownloadStatus Status { get; set; } = DownloadStatus.Pending;
-    public double Progress { get; set; } = 0;
+    
+    private DownloadStatus _status = DownloadStatus.Pending;
+    public DownloadStatus Status
+    {
+        get => _status;
+        set => SetProperty(ref _status, value);
+    }
+    
+    private double _progress = 0;
+    public double Progress
+    {
+        get => _progress;
+        set => SetProperty(ref _progress, value);
+    }
+    
     public long TotalBytes { get; set; } = 0;
     public long DownloadedBytes { get; set; } = 0;
     public double DownloadSpeed { get; set; } = 0;
@@ -80,7 +102,14 @@ public class DownloadItem
     public DateTime AddedTime { get; set; } = DateTime.Now;
     public DateTime? StartedTime { get; set; }
     public DateTime? CompletedTime { get; set; }
-    public string? ErrorMessage { get; set; }
+    
+    private string? _errorMessage;
+    public string? ErrorMessage
+    {
+        get => _errorMessage;
+        set => SetProperty(ref _errorMessage, value);
+    }
+    
     public DownloadOptions Options { get; set; } = new();
 }
 

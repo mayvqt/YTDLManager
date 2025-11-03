@@ -109,6 +109,10 @@
 
                 <!-- Additional Options -->
                 <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,16">
+                    <CheckBox Content="Audio Only"
+                              IsChecked="{Binding AudioOnly}"
+                              Margin="0,0,24,0"
+                              ToolTip="Extract audio only (ignores video quality settings)"/>
                     <CheckBox Content="Download Subtitles"
                               IsChecked="{Binding DownloadSubtitles}"
                               Margin="0,0,24,0"/>
@@ -187,6 +191,11 @@
                 <ListView Grid.Row="1" 
                           ItemsSource="{Binding Downloads}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" 

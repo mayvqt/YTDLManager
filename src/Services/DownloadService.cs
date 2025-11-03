@@ -54,9 +54,12 @@ public class DownloadService : IDownloadService
             DownloadAdded?.Invoke(this, item);
             Log.Information("Added download: {Title}", item.Title);
 
-            // Start download in background
-            _ = Task.Run(() => ProcessDownloadAsync(item));
+            // Start download in background - fire and forget with proper async handling
+            _ = ProcessDownloadAsync(item);
         }
+        
+        // Return completed task since we've successfully added the download
+        await Task.CompletedTask;
     }
 
     private async Task ProcessDownloadAsync(DownloadItem item)

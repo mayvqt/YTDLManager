@@ -159,21 +159,23 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Background="{DynamicResource MaterialDesignToolBarBackground}" Padding="16,8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Padding="16,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Downloads" 
-                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                               VerticalAlignment="Center"/>
+                        <TextBlock Text="Downloads" 
+                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                   VerticalAlignment="Center"/>
 
-                    <Button Grid.Column="1"
-                            Content="CLEAR COMPLETED"
-                            Command="{Binding ClearCompletedCommand}"
-                            Style="{StaticResource MaterialDesignFlatButton}"/>
-                </Grid>
+                        <Button Grid.Column="1"
+                                Content="CLEAR COMPLETED"
+                                Command="{Binding ClearCompletedCommand}"
+                                Style="{StaticResource MaterialDesignFlatButton}"/>
+                    </Grid>
+                </Border>
 
                 <ListView Grid.Row="1" 
                           ItemsSource="{Binding Downloads}"

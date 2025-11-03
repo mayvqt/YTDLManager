@@ -83,7 +83,19 @@ public partial class MainViewModel : ObservableObject
         _downloadService.DownloadCompleted += OnDownloadCompleted;
         _downloadService.DownloadFailed += OnDownloadFailed;
 
-        _ = InitializeAsync();
+        // Initialize asynchronously with proper error handling
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to initialize MainViewModel");
+                StatusMessage = "Initialization failed";
+            }
+        });
     }
 
     private async Task InitializeAsync()

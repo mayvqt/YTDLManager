@@ -44,11 +44,12 @@
             <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
                 <Setter Property="Background" Value="{StaticResource TealAccentBrush}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
-                <Setter Property="Foreground" Value="#1A1F26"/>
-                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Foreground" Value="#0F1419"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="{StaticResource TealAccentLightBrush}"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource TealAccentLightBrush}"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -57,6 +58,29 @@
                 <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
                 <Setter Property="Foreground" Value="{StaticResource TealAccentBrush}"/>
                 <Setter Property="FontWeight" Value="Medium"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{StaticResource TealAccentLightBrush}"/>
+                        <Setter Property="Foreground" Value="{StaticResource TealAccentLightBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="OptionToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background" Value="{StaticResource DarkSurfaceElevatedBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource TextSecondaryBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="{StaticResource TealAccentBrush}"/>
+                        <Setter Property="Foreground" Value="#0F1419"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             
             <Style x:Key="ProfessionalCard" TargetType="materialDesign:Card">

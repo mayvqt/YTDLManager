@@ -6,8 +6,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:YTDLManager.ViewModels"
         mc:Ignorable="d"
-        Title="YTDLManager - yt-dlp Download Manager" 
-        Height="800" Width="1200"
+        Title="YTDLManager" 
+        Height="900" Width="1400"
+        MinHeight="700" MinWidth="1200"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource DarkBackgroundBrush}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -15,287 +16,589 @@
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Auto">
+        TextOptions.TextRenderingMode="Auto"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip">
 
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" 
+                      ResizeBorderThickness="5"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
 
-        <!-- Header -->
-        <materialDesign:Card Grid.Row="0" Padding="16" Margin="0,0,0,16" Style="{StaticResource ProfessionalCard}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+    <Border BorderBrush="{StaticResource TealAccentBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
 
-                <StackPanel>
-                    <TextBlock Text="YTDLManager" 
-                               Style="{StaticResource HeaderText}"/>
-                    <TextBlock Text="{Binding YtDlpVersion, StringFormat='yt-dlp version: {0}'}"
-                               Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                               Foreground="{StaticResource TextSecondaryBrush}"
-                               Margin="0,4,0,0"/>
-                </StackPanel>
-
-                <Button Grid.Column="1" 
-                        Content="UPDATE YT-DLP"
-                        Command="{Binding UpdateYtDlpCommand}"
-                        IsEnabled="{Binding IsUpdating, Converter={StaticResource InverseBooleanConverter}}"
-                        Style="{StaticResource AccentButton}"
-                        VerticalAlignment="Center"/>
-            </Grid>
-        </materialDesign:Card>
-
-        <!-- Download Options -->
-        <materialDesign:Card Grid.Row="1" Padding="16" Margin="0,0,0,16" Style="{StaticResource ProfessionalCard}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- URL Input -->
-                <TextBox Grid.Row="0" Grid.Column="0"
-                         Text="{Binding VideoUrl, UpdateSourceTrigger=PropertyChanged}"
-                         materialDesign:HintAssist.Hint="Enter video URL"
-                         materialDesign:HintAssist.Foreground="{StaticResource TextSecondaryBrush}"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Foreground="{StaticResource TextPrimaryBrush}"
-                         BorderBrush="{StaticResource TealAccentBrush}"
-                         Margin="0,0,8,16"
-                         FontSize="14"/>
-
-                <Button Grid.Row="0" Grid.Column="1"
-                        Content="ADD DOWNLOAD"
-                        Command="{Binding AddDownloadCommand}"
-                        Style="{StaticResource AccentButton}"
-                        Height="56"
-                        Padding="24,0"
-                        Margin="0,0,0,16"/>
-
-                <!-- Quality Options -->
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,16">
-                    <ComboBox materialDesign:HintAssist.Hint="Quality"
-                              ItemsSource="{Binding QualityOptions}"
-                              SelectedItem="{Binding SelectedQuality}"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                              Width="200"
-                              Margin="0,0,16,0"/>
-
-                    <ComboBox materialDesign:HintAssist.Hint="Audio Format"
-                              ItemsSource="{Binding AudioFormatOptions}"
-                              SelectedItem="{Binding SelectedAudioFormat}"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                              Width="200"
-                              Margin="0,0,16,0"/>
-
-                    <ComboBox materialDesign:HintAssist.Hint="Video Codec"
-                              ItemsSource="{Binding CodecOptions}"
-                              SelectedItem="{Binding SelectedCodec}"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                              Width="200"/>
-                </StackPanel>
-
-                <!-- Additional Options -->
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,16">
-                    <CheckBox Content="Audio Only"
-                              IsChecked="{Binding AudioOnly}"
-                              Margin="0,0,24,0"
-                              ToolTip="Extract audio only (ignores video quality settings)"/>
-                    <CheckBox Content="Download Subtitles"
-                              IsChecked="{Binding DownloadSubtitles}"
-                              Margin="0,0,24,0"/>
-                    <CheckBox Content="Embed Subtitles"
-                              IsChecked="{Binding EmbedSubtitles}"
-                              IsEnabled="{Binding DownloadSubtitles}"
-                              Margin="0,0,24,0"/>
-                    <CheckBox Content="Embed Thumbnail"
-                              IsChecked="{Binding EmbedThumbnail}"
-                              Margin="0,0,24,0"/>
-                    <CheckBox Content="Embed Metadata"
-                              IsChecked="{Binding EmbedMetadata}"
-                              Margin="0,0,24,0"/>
-                    <CheckBox Content="Is Playlist"
-                              IsChecked="{Binding IsPlaylist}"
-                              Margin="0,0,24,0"/>
-                </StackPanel>
-
-                <!-- Output Path -->
-                <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <!-- Custom Title Bar -->
+            <Border Grid.Row="0" Background="{StaticResource DarkSurfaceElevatedBrush}">
+                <Grid MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0"
-                             Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"
-                             materialDesign:HintAssist.Hint="Output Directory"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Margin="0,0,8,0"/>
-
-                    <Button Grid.Column="1"
-                            Content="BROWSE"
-                            Command="{Binding BrowseOutputPathCommand}"
-                            Style="{StaticResource AccentOutlineButton}"
-                            Margin="0,0,8,0"/>
-
-                    <Button Grid.Column="2"
-                            Content="SAVE SETTINGS"
-                            Command="{Binding SaveSettingsCommand}"
-                            Style="{StaticResource AccentButton}"/>
-                </Grid>
-            </Grid>
-        </materialDesign:Card>
-
-        <!-- Downloads List -->
-        <materialDesign:Card Grid.Row="2" Style="{StaticResource ProfessionalCard}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Border Background="{DynamicResource DarkSurfaceElevatedBrush}" Padding="16,12">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="Downloads" 
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                                   Foreground="{StaticResource TealAccentBrush}"
+                    <!-- App Icon and Title -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Download" 
+                                                Foreground="{StaticResource TealAccentBrush}"
+                                                Width="28" Height="28"
+                                                VerticalAlignment="Center"/>
+                        <TextBlock Text="YTDLManager" 
+                                   FontSize="20" 
                                    FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
+                                   Margin="12,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <TextBlock Text="{Binding YtDlpVersion, StringFormat='• yt-dlp {0}'}"
+                                   FontSize="12"
+                                   Margin="16,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
 
-                        <Button Grid.Column="1"
-                                Content="CLEAR COMPLETED"
-                                Command="{Binding ClearCompletedCommand}"
+                    <!-- Window Controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="_" 
+                                Click="MinimizeButton_Click"
                                 Style="{StaticResource MaterialDesignFlatButton}"
-                                Foreground="{StaticResource TealAccentBrush}"/>
-                    </Grid>
-                </Border>
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                Width="46" Height="32"
+                                FontSize="20"
+                                Padding="0,-8,0,0"/>
+                        <Button Content="□" 
+                                Click="MaximizeButton_Click"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                Width="46" Height="32"
+                                FontSize="16"/>
+                        <Button Content="✕" 
+                                Click="CloseButton_Click"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="{StaticResource TextSecondaryBrush}"
+                                Width="46" Height="32"
+                                FontSize="16"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-                <ListView Grid.Row="1" 
-                          ItemsSource="{Binding Downloads}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" 
-                                    BorderThickness="0,0,0,1" 
-                                    Padding="8"
-                                    Margin="0,4">
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Margin="24,24,24,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" MinWidth="600"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1*" MinWidth="350"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Panel - Download Input & Queue -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Download Input Card -->
+                    <materialDesign:Card Grid.Row="0" Padding="24" Margin="0,0,0,16" Style="{StaticResource ProfessionalCard}">
+                        <StackPanel>
+                            <!-- Section Header -->
+                            <TextBlock Text="Add Download" 
+                                       FontSize="18" 
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TealAccentBrush}"
+                                       Margin="0,0,0,20"/>
+
+                            <!-- URL Input -->
+                            <TextBox Text="{Binding VideoUrl, UpdateSourceTrigger=PropertyChanged}"
+                                     materialDesign:HintAssist.Hint="Paste video URL here..."
+                                     materialDesign:HintAssist.Foreground="{StaticResource TextSecondaryBrush}"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     Foreground="{StaticResource TextPrimaryBrush}"
+                                     BorderBrush="{StaticResource TealAccentBrush}"
+                                     FontSize="15"
+                                     Margin="0,0,0,20"/>
+
+                            <!-- Quality Selectors -->
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox Grid.Column="0"
+                                          materialDesign:HintAssist.Hint="Quality"
+                                          ItemsSource="{Binding QualityOptions}"
+                                          SelectedItem="{Binding SelectedQuality}"
+                                          Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
+
+                                <ComboBox Grid.Column="2"
+                                          materialDesign:HintAssist.Hint="Audio Format"
+                                          ItemsSource="{Binding AudioFormatOptions}"
+                                          SelectedItem="{Binding SelectedAudioFormat}"
+                                          Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
+
+                                <ComboBox Grid.Column="4"
+                                          materialDesign:HintAssist.Hint="Video Codec"
+                                          ItemsSource="{Binding CodecOptions}"
+                                          SelectedItem="{Binding SelectedCodec}"
+                                          Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
+                            </Grid>
+
+                            <!-- Options Chips -->
+                            <WrapPanel Margin="0,0,0,20">
+                                <ToggleButton Content="🎵 Audio Only"
+                                              IsChecked="{Binding AudioOnly}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"
+                                              ToolTip="Extract audio only"/>
+                                <ToggleButton Content="📝 Subtitles"
+                                              IsChecked="{Binding DownloadSubtitles}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"/>
+                                <ToggleButton Content="📄 Embed Subs"
+                                              IsChecked="{Binding EmbedSubtitles}"
+                                              IsEnabled="{Binding DownloadSubtitles}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"/>
+                                <ToggleButton Content="🖼️ Thumbnail"
+                                              IsChecked="{Binding EmbedThumbnail}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"/>
+                                <ToggleButton Content="ℹ️ Metadata"
+                                              IsChecked="{Binding EmbedMetadata}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"/>
+                                <ToggleButton Content="📋 Playlist"
+                                              IsChecked="{Binding IsPlaylist}"
+                                              Style="{StaticResource OptionToggleButton}"
+                                              Margin="0,0,8,8"
+                                              Padding="12,8"/>
+                            </WrapPanel>
+
+                            <!-- Output Path -->
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"
+                                         materialDesign:HintAssist.Hint="Output Directory"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding BrowseOutputPathCommand}"
+                                        Style="{StaticResource AccentOutlineButton}"
+                                        Height="56">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FolderOpen" 
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,8,0"/>
+                                        <TextBlock Text="BROWSE" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <!-- Action Buttons -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Command="{Binding AddDownloadCommand}"
+                                        Style="{StaticResource AccentButton}"
+                                        Height="50">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="DownloadCircle" 
+                                                                Width="24" Height="24"
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,12,0"/>
+                                        <TextBlock Text="ADD TO QUEUE" 
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding SaveSettingsCommand}"
+                                        Style="{StaticResource AccentOutlineButton}"
+                                        Height="50"
+                                        Width="120">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="ContentSave" 
+                                                                VerticalAlignment="Center"
+                                                                Margin="0,0,8,0"/>
+                                        <TextBlock Text="SAVE" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Download Queue -->
+                    <materialDesign:Card Grid.Row="1" Style="{StaticResource ProfessionalCard}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Queue Header -->
+                            <Border Grid.Row="0" Background="{StaticResource DarkSurfaceElevatedBrush}" 
+                                    Padding="20,16" CornerRadius="8,8,0,0">
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Title and Status -->
-                                    <TextBlock Grid.Row="0" Grid.Column="0"
-                                               Text="{Binding Title}"
-                                               Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                                               TextTrimming="CharacterEllipsis"/>
+                                    <materialDesign:PackIcon Grid.Column="0"
+                                                            Kind="PlaylistPlay"
+                                                            Foreground="{StaticResource TealAccentBrush}"
+                                                            Width="24" Height="24"
+                                                            VerticalAlignment="Center"
+                                                            Margin="0,0,12,0"/>
 
-                                    <StackPanel Grid.Row="0" Grid.Column="1" 
-                                                Orientation="Horizontal"
-                                                VerticalAlignment="Center">
-                                        <Button Content="CANCEL"
-                                                Command="{Binding DataContext.CancelDownloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding Id}"
-                                                Style="{StaticResource MaterialDesignFlatButton}"
-                                                Margin="0,0,8,0">
-                                            <Button.Visibility>
-                                                <MultiBinding Converter="{StaticResource DownloadStatusToVisibilityConverter}">
-                                                    <Binding Path="Status"/>
-                                                </MultiBinding>
-                                            </Button.Visibility>
-                                        </Button>
+                                    <TextBlock Grid.Column="1"
+                                               Text="Download Queue" 
+                                               FontSize="16"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               VerticalAlignment="Center"/>
 
-                                        <Button Content="REMOVE"
-                                                Command="{Binding DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding Id}"
-                                                Style="{StaticResource MaterialDesignFlatButton}"/>
-                                    </StackPanel>
-
-                                    <!-- Progress Bar -->
-                                    <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
-                                                 Value="{Binding Progress}"
-                                                 Minimum="0"
-                                                 Maximum="100"
-                                                 Style="{StaticResource AccentProgressBar}"
-                                                 Margin="0,8"/>
-
-                                    <!-- Details -->
-                                    <StackPanel Grid.Row="2" Grid.ColumnSpan="2" 
-                                                Orientation="Horizontal"
-                                                Margin="0,4,0,0">
-                                        <TextBlock Text="{Binding Status}"
-                                                   Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                   Margin="0,0,16,0"/>
-                                        <TextBlock Text="{Binding Progress, StringFormat='{}{0:F1}%'}"
-                                                   Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                   Margin="0,0,16,0"/>
-                                        <TextBlock Text="{Binding ErrorMessage}"
-                                                   Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                                   Foreground="{DynamicResource MaterialDesignValidationErrorBrush}">
-                                            <TextBlock.Visibility>
-                                                <Binding Path="Status" 
-                                                         Converter="{StaticResource StatusToErrorVisibilityConverter}"/>
-                                            </TextBlock.Visibility>
-                                        </TextBlock>
-                                    </StackPanel>
+                                    <Button Grid.Column="2"
+                                            Command="{Binding ClearCompletedCommand}"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Foreground="{StaticResource TealAccentBrush}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="PlaylistRemove" 
+                                                                    VerticalAlignment="Center"
+                                                                    Margin="0,0,8,0"/>
+                                            <TextBlock Text="Clear Completed" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
                                 </Grid>
                             </Border>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+
+                            <!-- Download List -->
+                            <ScrollViewer Grid.Row="1" 
+                                        VerticalScrollBarVisibility="Auto"
+                                        HorizontalScrollBarVisibility="Disabled"
+                                        Padding="12,12,12,0">
+                                <ItemsControl ItemsSource="{Binding Downloads}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <materialDesign:Card Margin="0,0,0,12" 
+                                                                UniformCornerRadius="8"
+                                                                Background="{StaticResource DarkSurfaceElevatedBrush}">
+                                                <Grid Margin="20,16">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <!-- Title and Actions -->
+                                                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="{Binding Title}"
+                                                                   FontSize="15"
+                                                                   FontWeight="Medium"
+                                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   VerticalAlignment="Center"/>
+
+                                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                            <Button Command="{Binding DataContext.CancelDownloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                    CommandParameter="{Binding Id}"
+                                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                                                    ToolTip="Cancel Download"
+                                                                    Width="32" Height="32"
+                                                                    Margin="4,0">
+                                                                <Button.Visibility>
+                                                                    <MultiBinding Converter="{StaticResource DownloadStatusToVisibilityConverter}">
+                                                                        <Binding Path="Status"/>
+                                                                    </MultiBinding>
+                                                                </Button.Visibility>
+                                                                <materialDesign:PackIcon Kind="Close" Width="18" Height="18"/>
+                                                            </Button>
+
+                                                            <Button Command="{Binding DataContext.RemoveDownloadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                    CommandParameter="{Binding Id}"
+                                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                                                    ToolTip="Remove from Queue"
+                                                                    Width="32" Height="32"
+                                                                    Margin="4,0">
+                                                                <materialDesign:PackIcon Kind="Delete" Width="18" Height="18"/>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Grid>
+
+                                                    <!-- Progress Bar -->
+                                                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <ProgressBar Grid.Column="0"
+                                                                     Value="{Binding Progress}"
+                                                                     Minimum="0"
+                                                                     Maximum="100"
+                                                                     Style="{StaticResource AccentProgressBar}"
+                                                                     Height="8"
+                                                                     Margin="0,0,12,0"/>
+
+                                                        <TextBlock Grid.Column="1"
+                                                                   Text="{Binding Progress, StringFormat='{}{0:F1}%'}"
+                                                                   FontSize="13"
+                                                                   FontWeight="SemiBold"
+                                                                   Foreground="{StaticResource TealAccentBrush}"
+                                                                   VerticalAlignment="Center"
+                                                                   MinWidth="50"/>
+                                                    </Grid>
+
+                                                    <!-- Status Info -->
+                                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                                        <Border Background="{StaticResource DarkBackgroundBrush}"
+                                                                CornerRadius="4"
+                                                                Padding="8,4"
+                                                                Margin="0,0,16,0">
+                                                            <TextBlock Text="{Binding Status}"
+                                                                       FontSize="12"
+                                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                        </Border>
+
+                                                        <TextBlock Text="{Binding ErrorMessage}"
+                                                                   FontSize="12"
+                                                                   Foreground="#EF5350"
+                                                                   VerticalAlignment="Center">
+                                                            <TextBlock.Visibility>
+                                                                <Binding Path="Status" 
+                                                                         Converter="{StaticResource StatusToErrorVisibilityConverter}"/>
+                                                            </TextBlock.Visibility>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </materialDesign:Card>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
+
+                <!-- Right Panel - Info & Updates -->
+                <materialDesign:Card Grid.Column="2" Padding="24" Style="{StaticResource ProfessionalCard}">
+                    <StackPanel>
+                        <!-- Stats Section -->
+                        <TextBlock Text="Statistics" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TealAccentBrush}"
+                                   Margin="0,0,0,20"/>
+
+                        <Border Background="{StaticResource DarkSurfaceElevatedBrush}"
+                                CornerRadius="8"
+                                Padding="16"
+                                Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <materialDesign:PackIcon Grid.Row="0" Grid.Column="0"
+                                                        Kind="Download"
+                                                        Foreground="{StaticResource TealAccentBrush}"
+                                                        Width="20" Height="20"
+                                                        Margin="0,0,12,12"/>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,12">
+                                    <TextBlock Text="Total Downloads"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="{Binding Downloads.Count}"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                                </StackPanel>
+
+                                <materialDesign:PackIcon Grid.Row="1" Grid.Column="0"
+                                                        Kind="CheckCircle"
+                                                        Foreground="#66BB6A"
+                                                        Width="20" Height="20"
+                                                        Margin="0,0,12,12"/>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,12">
+                                    <TextBlock Text="Completed"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="#66BB6A">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}">
+                                                <Binding Path="Downloads.Count"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <materialDesign:PackIcon Grid.Row="2" Grid.Column="0"
+                                                        Kind="ProgressDownload"
+                                                        Foreground="#FFA726"
+                                                        Width="20" Height="20"
+                                                        Margin="0,0,12,0"/>
+                                <StackPanel Grid.Row="2" Grid.Column="1">
+                                    <TextBlock Text="In Progress"
+                                               FontSize="11"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="0"
+                                               FontSize="20"
+                                               FontWeight="Bold"
+                                               Foreground="#FFA726"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Updates Section -->
+                        <TextBlock Text="Updates" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TealAccentBrush}"
+                                   Margin="0,24,0,20"/>
+
+                        <Button Command="{Binding UpdateYtDlpCommand}"
+                                IsEnabled="{Binding IsUpdating, Converter={StaticResource InverseBooleanConverter}}"
+                                Style="{StaticResource AccentButton}"
+                                Height="48"
+                                Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Update" 
+                                                        Width="20" Height="20"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,0,12,0"/>
+                                <TextBlock Text="Update yt-dlp" 
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Text="{Binding YtDlpVersion, StringFormat='Current: {0}'}"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   HorizontalAlignment="Center"/>
+
+                        <!-- Quick Info -->
+                        <Border Background="{StaticResource DarkSurfaceElevatedBrush}"
+                                CornerRadius="8"
+                                Padding="16"
+                                Margin="0,32,0,0">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="InformationOutline"
+                                                        Foreground="{StaticResource TealAccentBrush}"
+                                                        Width="32" Height="32"
+                                                        HorizontalAlignment="Center"
+                                                        Margin="0,0,0,12"/>
+                                <TextBlock Text="Quick Tips"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,12"/>
+                                <TextBlock FontSize="12"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="18">
+                                    <Run Text="• Use Audio Only for music downloads"/>
+                                    <LineBreak/>
+                                    <Run Text="• Enable Playlist for channels"/>
+                                    <LineBreak/>
+                                    <Run Text="• Subtitles support 100+ languages"/>
+                                    <LineBreak/>
+                                    <Run Text="• Works with 1000+ websites"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </materialDesign:Card>
             </Grid>
-        </materialDesign:Card>
 
-        <!-- Status Bar -->
-        <materialDesign:Card Grid.Row="3" Padding="16,12" Margin="0,16,0,0" Style="{StaticResource ProfessionalCard}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <!-- Status Bar -->
+            <Border Grid.Row="3" 
+                    Background="{StaticResource DarkSurfaceElevatedBrush}"
+                    Padding="24,0">
+                <Grid Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding StatusMessage}" 
-                           VerticalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}"
-                           Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <materialDesign:PackIcon Grid.Column="0"
+                                            Kind="InformationOutline"
+                                            Foreground="{StaticResource TealAccentBrush}"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,12,0"/>
 
-                <ProgressBar Grid.Column="1"
-                             Value="{Binding UpdateProgress}"
-                             Minimum="0"
-                             Maximum="100"
-                             Width="200"
-                             Style="{StaticResource AccentProgressBar}"
-                             Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </Grid>
-        </materialDesign:Card>
-    </Grid>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding StatusMessage}" 
+                               FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="2" 
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ProgressBar Value="{Binding UpdateProgress}"
+                                     Minimum="0"
+                                     Maximum="100"
+                                     Width="120"
+                                     Height="4"
+                                     Style="{StaticResource AccentProgressBar}"
+                                     Margin="0,0,12,0"/>
+                        <TextBlock Text="{Binding UpdateProgress, StringFormat='{}{0:F0}%'}"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TealAccentBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
 </Window>

@@ -1,0 +1,25 @@
+<Application x:Class="YTDLManager.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:YTDLManager.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Material Design -->
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Value Converters -->
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:DownloadStatusToVisibilityConverter x:Key="DownloadStatusToVisibilityConverter"/>
+            <converters:StatusToErrorVisibilityConverter x:Key="StatusToErrorVisibilityConverter"/>
+            <converters:FileSizeConverter x:Key="FileSizeConverter"/>
+            <converters:SpeedConverter x:Key="SpeedConverter"/>
+            <converters:TimeSpanConverter x:Key="TimeSpanConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  quick-checks:
+    name: Quick checks (build & test)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: src
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: src/**/coverage.cobertura.xml
+
+  full-build:
+    name: Full build (conditional)
+    runs-on: windows-latest
+    needs: quick-checks
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.ref == 'refs/heads/main' ||
+      github.ref == 'refs/heads/dev' ||
+      startsWith(github.ref, 'refs/heads/release/')
+    defaults:
+      run:
+        working-directory: src
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build (sanity check)
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Publish
+        run: dotnet publish --no-build --configuration Release --output ../publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytdlmanager-sanity
+          path: publish/

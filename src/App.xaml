@@ -6,10 +6,76 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Material Design -->
-                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <!-- Material Design Base Theme -->
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="Teal" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Custom Color Palette -->
+            <Color x:Key="TealAccent">#00BFA5</Color>
+            <Color x:Key="TealAccentDark">#00897B</Color>
+            <Color x:Key="TealAccentLight">#64FFDA</Color>
+            <Color x:Key="DarkBackground">#0F1419</Color>
+            <Color x:Key="DarkSurface">#1A1F26</Color>
+            <Color x:Key="DarkSurfaceElevated">#252C35</Color>
+            <Color x:Key="TextPrimary">#E8EAED</Color>
+            <Color x:Key="TextSecondary">#9AA0A6</Color>
+            
+            <SolidColorBrush x:Key="TealAccentBrush" Color="{StaticResource TealAccent}"/>
+            <SolidColorBrush x:Key="TealAccentDarkBrush" Color="{StaticResource TealAccentDark}"/>
+            <SolidColorBrush x:Key="TealAccentLightBrush" Color="{StaticResource TealAccentLight}"/>
+            <SolidColorBrush x:Key="DarkBackgroundBrush" Color="{StaticResource DarkBackground}"/>
+            <SolidColorBrush x:Key="DarkSurfaceBrush" Color="{StaticResource DarkSurface}"/>
+            <SolidColorBrush x:Key="DarkSurfaceElevatedBrush" Color="{StaticResource DarkSurfaceElevated}"/>
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}"/>
+            
+            <!-- Override Material Design Colors -->
+            <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource DarkBackground}"/>
+            <SolidColorBrush x:Key="MaterialDesignCardBackground" Color="{StaticResource DarkSurface}"/>
+            <SolidColorBrush x:Key="MaterialDesignToolBarBackground" Color="{StaticResource DarkSurfaceElevated}"/>
+            <SolidColorBrush x:Key="MaterialDesignBody" Color="{StaticResource TextPrimary}"/>
+            <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="{StaticResource TextSecondary}"/>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource TealAccent}"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource TealAccentDark}"/>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource TealAccentLight}"/>
+            
+            <!-- Custom Styles -->
+            <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background" Value="{StaticResource TealAccentBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
+                <Setter Property="Foreground" Value="#1A1F26"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{StaticResource TealAccentLightBrush}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="AccentOutlineButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
+                <Setter Property="BorderBrush" Value="{StaticResource TealAccentBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource TealAccentBrush}"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+            </Style>
+            
+            <Style x:Key="ProfessionalCard" TargetType="materialDesign:Card">
+                <Setter Property="Background" Value="{StaticResource DarkSurfaceBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="UniformCornerRadius" Value="8"/>
+            </Style>
+            
+            <Style x:Key="HeaderText" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadline4TextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            
+            <Style x:Key="AccentProgressBar" TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
+                <Setter Property="Foreground" Value="{StaticResource TealAccentBrush}"/>
+                <Setter Property="Background" Value="{StaticResource DarkSurfaceElevatedBrush}"/>
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
             
             <!-- Value Converters -->
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>

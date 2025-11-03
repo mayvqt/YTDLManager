@@ -9,9 +9,9 @@
         Title="YTDLManager - yt-dlp Download Manager" 
         Height="800" Width="1200"
         WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource MaterialDesignPaper}"
+        Background="{DynamicResource DarkBackgroundBrush}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.Foreground="{DynamicResource TextPrimaryBrush}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <materialDesign:Card Grid.Row="0" Padding="16" Margin="0,0,0,16">
+        <materialDesign:Card Grid.Row="0" Padding="16" Margin="0,0,0,16" Style="{StaticResource ProfessionalCard}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -35,9 +35,10 @@
 
                 <StackPanel>
                     <TextBlock Text="YTDLManager" 
-                               Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
+                               Style="{StaticResource HeaderText}"/>
                     <TextBlock Text="{Binding YtDlpVersion, StringFormat='yt-dlp version: {0}'}"
                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                               Foreground="{StaticResource TextSecondaryBrush}"
                                Margin="0,4,0,0"/>
                 </StackPanel>
 
@@ -45,13 +46,13 @@
                         Content="UPDATE YT-DLP"
                         Command="{Binding UpdateYtDlpCommand}"
                         IsEnabled="{Binding IsUpdating, Converter={StaticResource InverseBooleanConverter}}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Style="{StaticResource AccentButton}"
                         VerticalAlignment="Center"/>
             </Grid>
         </materialDesign:Card>
 
         <!-- Download Options -->
-        <materialDesign:Card Grid.Row="1" Padding="16" Margin="0,0,0,16">
+        <materialDesign:Card Grid.Row="1" Padding="16" Margin="0,0,0,16" Style="{StaticResource ProfessionalCard}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -68,14 +69,17 @@
                 <TextBox Grid.Row="0" Grid.Column="0"
                          Text="{Binding VideoUrl, UpdateSourceTrigger=PropertyChanged}"
                          materialDesign:HintAssist.Hint="Enter video URL"
+                         materialDesign:HintAssist.Foreground="{StaticResource TextSecondaryBrush}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource TealAccentBrush}"
                          Margin="0,0,8,16"
                          FontSize="14"/>
 
                 <Button Grid.Row="0" Grid.Column="1"
                         Content="ADD DOWNLOAD"
                         Command="{Binding AddDownloadCommand}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Style="{StaticResource AccentButton}"
                         Height="56"
                         Padding="24,0"
                         Margin="0,0,0,16"/>
@@ -140,26 +144,26 @@
                     <Button Grid.Column="1"
                             Content="BROWSE"
                             Command="{Binding BrowseOutputPathCommand}"
-                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Style="{StaticResource AccentOutlineButton}"
                             Margin="0,0,8,0"/>
 
                     <Button Grid.Column="2"
                             Content="SAVE SETTINGS"
                             Command="{Binding SaveSettingsCommand}"
-                            Style="{StaticResource MaterialDesignRaisedButton}"/>
+                            Style="{StaticResource AccentButton}"/>
                 </Grid>
             </Grid>
         </materialDesign:Card>
 
         <!-- Downloads List -->
-        <materialDesign:Card Grid.Row="2">
+        <materialDesign:Card Grid.Row="2" Style="{StaticResource ProfessionalCard}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Padding="16,8">
+                <Border Background="{DynamicResource DarkSurfaceElevatedBrush}" Padding="16,12">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -168,12 +172,15 @@
 
                         <TextBlock Text="Downloads" 
                                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                   Foreground="{StaticResource TealAccentBrush}"
+                                   FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
 
                         <Button Grid.Column="1"
                                 Content="CLEAR COMPLETED"
                                 Command="{Binding ClearCompletedCommand}"
-                                Style="{StaticResource MaterialDesignFlatButton}"/>
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="{StaticResource TealAccentBrush}"/>
                     </Grid>
                 </Border>
 
@@ -229,7 +236,7 @@
                                                  Value="{Binding Progress}"
                                                  Minimum="0"
                                                  Maximum="100"
-                                                 Height="4"
+                                                 Style="{StaticResource AccentProgressBar}"
                                                  Margin="0,8"/>
 
                                     <!-- Details -->
@@ -260,7 +267,7 @@
         </materialDesign:Card>
 
         <!-- Status Bar -->
-        <materialDesign:Card Grid.Row="3" Padding="16,8" Margin="0,16,0,0">
+        <materialDesign:Card Grid.Row="3" Padding="16,12" Margin="0,16,0,0" Style="{StaticResource ProfessionalCard}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -269,6 +276,7 @@
 
                 <TextBlock Text="{Binding StatusMessage}" 
                            VerticalAlignment="Center"
+                           Foreground="{StaticResource TextSecondaryBrush}"
                            Style="{StaticResource MaterialDesignBody2TextBlock}"/>
 
                 <ProgressBar Grid.Column="1"
@@ -276,7 +284,7 @@
                              Minimum="0"
                              Maximum="100"
                              Width="200"
-                             Height="4"
+                             Style="{StaticResource AccentProgressBar}"
                              Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
         </materialDesign:Card>
